@@ -6,6 +6,6 @@ def home(request):
     return HttpResponse("Backend is running successfully ✅")
 
 urlpatterns = [
-    path('', home),   # ✅ ROOT URL FIXED
+    path('', home),
     path('admin/', admin.site.urls),
 ]
