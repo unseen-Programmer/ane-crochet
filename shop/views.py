@@ -1,12 +1,19 @@
-from rest_framework import generics
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from .models import Product
-from .serializers import ProductSerializer
 
-class ProductListView(generics.ListAPIView):
-    queryset = Product.objects.all().select_related("category").prefetch_related("images")
-    serializer_class = ProductSerializer
 
-class ProductDetailView(generics.RetrieveAPIView):
-    queryset = Product.objects.all().select_related("category").prefetch_related("images")
-    serializer_class = ProductSerializer
-    lookup_field = "slug"
+def product_list(request):
+    products = Product.objects.all().values()
+    return JsonResponse(list(products), safe=False)
+
+
+def product_detail(request, slug):
+    product = get_object_or_404(Product, slug=slug)
+    return JsonResponse({
+        "id": product.id,
+        "name": product.name,
+        "price": product.price,
+        "slug": product.slug,
+        "description": product.description,
+    })
