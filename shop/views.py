@@ -1,19 +1,23 @@
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from .models import Product
+from .serializers import ProductSerializer
 
-
+@api_view(["GET"])
 def product_list(request):
-    products = Product.objects.all().values()
-    return JsonResponse(list(products), safe=False)
+    products = Product.objects.all()
+    serializer = ProductSerializer(
+        products,
+        many=True,
+        context={"request": request}
+    )
+    return Response(serializer.data)
 
-
+@api_view(["GET"])
 def product_detail(request, slug):
-    product = get_object_or_404(Product, slug=slug)
-    return JsonResponse({
-        "id": product.id,
-        "name": product.name,
-        "price": product.price,
-        "slug": product.slug,
-        "description": product.description,
-    })
+    product = Product.objects.get(slug=slug)
+    serializer = ProductSerializer(
+        product,
+        context={"request": request}
+    )
+    return Response(serializer.data)

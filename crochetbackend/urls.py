@@ -13,5 +13,4 @@ urlpatterns = [
     path("api/", include("shop.urls")),
 ]
 
-# ✅ REQUIRED FOR MEDIA (IMAGES) TO WORK ON RENDER
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

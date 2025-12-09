@@ -1,23 +1,7 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .models import Product
-from .serializers import ProductSerializer
+from django.urls import path
+from .views import product_list, product_detail
 
-@api_view(["GET"])
-def product_list(request):
-    products = Product.objects.all()
-    serializer = ProductSerializer(
-        products,
-        many=True,
-        context={"request": request}   # ✅ THIS FIXES IMAGE URL
-    )
-    return Response(serializer.data)
-
-@api_view(["GET"])
-def product_detail(request, slug):
-    product = Product.objects.get(slug=slug)
-    serializer = ProductSerializer(
-        product,
-        context={"request": request}  # ✅ THIS FIXES IMAGE URL
-    )
-    return Response(serializer.data)
+urlpatterns = [
+    path("products/", product_list, name="product-list"),
+    path("products/<slug:slug>/", product_detail, name="product-detail"),
+]
